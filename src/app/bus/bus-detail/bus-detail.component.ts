@@ -142,4 +142,9 @@ export class BusDetailComponent implements OnInit {
     this.modelSelected = this.busService.createModel(id,name,this.brandSelected);
 
   }
+
+  public compareObjects(onombre1: any, onombre2: any): boolean {
+    console.log("string nombre")
+    return (onombre1 && onombre2 && (onombre1.id === onombre2.id));
+  }
 }

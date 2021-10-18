@@ -70,18 +70,21 @@ export class TripDetailComponent implements OnInit {
   }
 
   buildForm(trip: Trip | null) {
-    if (trip != null)
+    if (trip != null) {
+      const startdate = new Date(trip.startDate * 1000);
+      const enddate = new Date(trip.endDate * 1000);
       this.formTrip.patchValue({
         id: trip.id,
         origen: trip.departure,
         destination: trip.destination,
-        startDate: trip.startDate,
-        endDate: trip.endDate,
+        startDate: startdate,
+        endDate: enddate,
         bus: trip.bus,
         passengers: trip.passengers,
         modelo: trip.bus.model.name,
         brand: trip.bus.model.brand.name
       })
+    }
   }
 
   public get fc() {

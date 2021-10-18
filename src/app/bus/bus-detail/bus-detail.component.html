@@ -29,10 +29,8 @@
 
   <mat-form-field appearance="legacy" class="input-form">
     <mat-label>Marca del colectivo</mat-label>
-    <mat-select matInput
-                [ngModel]
-                food="marca" formControlName="marca">
-      <mat-option *ngFor="let marca of brands" [value]="marca.name" (onSelectionChange)="findModels(marca.id)"
+    <mat-select  formControlName="marca" [compareWith]="compareObjects">
+      <mat-option *ngFor="let marca of brands" [value]="marca" (onSelectionChange)="findModels(marca.id)"
                   (onSelectionChange)="createBrand(marca.id,marca.name,marca.models)">
         {{marca.name}}
       </mat-option>
@@ -43,16 +41,9 @@
   </mat-form-field>
 
   <mat-form-field appearance="legacy" class="input-form">
-<!--  <mat-label>Marca del colectivo:</mat-label>-->
-  <input readonly matInput formControlName="brand">
-  </mat-form-field>
-
-  <mat-form-field appearance="legacy" class="input-form">
     <mat-label>Modelo del colectivo</mat-label>
-    <mat-select matInput
-                [ngModel]
-                food="model" formControlName="model">
-      <mat-option  *ngFor="let model of models" [value]="model.name" (onSelectionChange)="createModel(model.id,model.name,model.brand)">
+    <mat-select formControlName="model" [compareWith]="compareObjects">
+      <mat-option  *ngFor="let model of models" [value]="model" (onSelectionChange)="createModel(model.id,model.name,model.brand)">
         {{model.name}}
       </mat-option>
     </mat-select>
@@ -60,12 +51,6 @@
       Debe seleccionar un modelo.
     </mat-error>
   </mat-form-field>
-
-  <mat-form-field appearance="legacy" class="input-form">
-<!--    <mat-label>Modelo del colectivo:</mat-label>-->
-    <input readonly matInput formControlName="modelo">
-  </mat-form-field>
-
 
   <div>
     <button mat-button (click)="goToBack()">Volver</button>
