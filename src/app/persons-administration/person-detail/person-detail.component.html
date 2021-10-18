@@ -1,0 +1,14 @@
+
+<div style="text-align: center" *ngIf="person != null">
+  <p>Editar la informacion de una persona</p>
+  <label>Nombre:</label>
+  <input type="text" [(ngModel)]="person.firstName">
+  <br>
+  <label>Apellido:</label>
+  <input type="text" [(ngModel)]="person.lastName">
+  <br>
+  <label>Edad:</label>
+  <input type="number" min="1" max="99" [(ngModel)]="person.age">
+  <br>
+<!--  <button (click)="selectPerson(null)">Cerrar</button>-->
+</div>

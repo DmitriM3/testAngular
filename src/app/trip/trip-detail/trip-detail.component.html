@@ -1,0 +1,96 @@
+<mat-card [formGroup]="formTrip" *ngIf="!loading">
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Ciudad Origen:</mat-label>
+    <input matInput formControlName="origen">
+    <ng-container *ngIf="fc.origen.invalid &&(fc.origen.dirty || fc.origen.touched)">
+      <mat-error *ngIf="fc.origen.errors?.required">
+        Este campo es requerido.
+      </mat-error>
+    </ng-container>
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Ciudad Destino:</mat-label>
+    <input matInput formControlName="destination">
+    <ng-container *ngIf="fc.destination.invalid &&(fc.destination.dirty || fc.destination.touched)">
+      <mat-error *ngIf="fc.destination.errors?.required">
+        Este campo es requerido.
+      </mat-error>
+    </ng-container>
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Fecha de salida:</mat-label>
+    <input type="number" matInput formControlName="startDate">
+    <ng-container *ngIf="fc.startDate.invalid &&(fc.startDate.dirty || fc.startDate.touched)">
+      <mat-error *ngIf="fc.startDate.errors?.required">
+        Este campo es requerido.
+      </mat-error>
+    </ng-container>
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Fecha de llegada:</mat-label>
+    <input type="number" matInput formControlName="endDate">
+    <ng-container *ngIf="fc.endDate.invalid &&(fc.endDate.dirty || fc.endDate.touched)">
+      <mat-error *ngIf="fc.endDate.errors?.required">
+        Este campo es requerido.
+      </mat-error>
+    </ng-container>
+  </mat-form-field>
+
+  <!-- Bus Section -->
+
+<!--  <mat-form-field appearance="legacy" class="input-form">-->
+<!--    <mat-label>Marca del colectivo</mat-label>-->
+<!--    <mat-select matInput-->
+<!--                [ngModel]-->
+<!--                food="marca" formControlName="marca">-->
+<!--      <mat-option *ngFor="let marca of brands" [value]="marca.name" (onSelectionChange)="findBusModels(marca.id)"-->
+<!--                  (onSelectionChange)="createBrand(marca.id,marca.name,marca.models)">-->
+<!--        {{marca.name}}-->
+<!--      </mat-option>-->
+<!--    </mat-select>-->
+<!--    <mat-error *ngIf="formTrip.controls['marca'].hasError('required') && formTrip.controls['marca'].pristine">-->
+<!--      Debe seleccionar una marca.-->
+<!--    </mat-error>-->
+<!--  </mat-form-field>-->
+
+<!--  <mat-form-field appearance="legacy" class="input-form">-->
+<!--    &lt;!&ndash;  <mat-label>Marca del colectivo:</mat-label>&ndash;&gt;-->
+<!--    <input readonly matInput formControlName="brand">-->
+<!--  </mat-form-field>-->
+
+<!--  <mat-form-field appearance="legacy" class="input-form">-->
+<!--    <mat-label>Modelo del colectivo</mat-label>-->
+<!--    <mat-select matInput-->
+<!--                [ngModel]-->
+<!--                food="model" formControlName="model">-->
+<!--      <mat-option  *ngFor="let model of models" [value]="model.name" (onSelectionChange)="createModel(model.id,model.name,model.brand)">-->
+<!--        {{model.name}}-->
+<!--      </mat-option>-->
+<!--    </mat-select>-->
+<!--    <mat-error *ngIf="formTrip.controls['model'].hasError('required') && formTrip.controls['model'].pristine">-->
+<!--      Debe seleccionar un modelo.-->
+<!--    </mat-error>-->
+<!--  </mat-form-field>-->
+
+<!--  <mat-form-field appearance="legacy" class="input-form">-->
+<!--    &lt;!&ndash;    <mat-label>Modelo del colectivo:</mat-label>&ndash;&gt;-->
+<!--    <input readonly matInput formControlName="modelo">-->
+<!--  </mat-form-field>-->
+
+  <!-- End Bus Section -->
+
+  <div>
+    <button mat-button (click)="goToBack()">Volver</button>
+    <button mat-button color="primary" (click)="save()"
+            [disabled]="formTrip.invalid || loading">Guardar</button>
+  </div>
+</mat-card>
+<mat-spinner *ngIf="loading" style="margin: 0px auto"></mat-spinner>
+
+<p>Form value: {{formTrip.value | json}}</p>
+<p>Form status: {{formTrip.status}}</p>
+

@@ -1,0 +1,9 @@
+button{
+  margin-top: 20px
+}
+.input-form{
+  display: flex;
+}
+mat-card{
+  width: 75%;
+}

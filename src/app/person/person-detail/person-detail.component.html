@@ -1,0 +1,47 @@
+<mat-card [formGroup]="formPerson" *ngIf="!loading">
+    <mat-form-field appearance="legacy" class="input-form">
+      <mat-label>Nombre:</mat-label>
+      <input matInput formControlName="name">
+      <ng-container *ngIf="fc.name.invalid &&(fc.name.dirty || fc.name.touched)">
+        <mat-error *ngIf="fc.name.errors?.required">
+          Este campo es requerido.
+        </mat-error>
+        <mat-error *ngIf="fc.name.errors?.minlength">
+          Este campo requiere mas de 3 caracteres.
+        </mat-error>
+      </ng-container>
+    </mat-form-field>
+    <mat-form-field appearance="legacy" class="input-form">
+      <mat-label>Apellido:</mat-label>
+      <input matInput formControlName="lastName">
+      <ng-container *ngIf="fc.lastName.invalid &&(fc.lastName.dirty || fc.lastName.touched)">
+        <mat-error *ngIf="fc.lastName.errors?.required">
+          Este campo es requerido.
+        </mat-error>
+        <mat-error *ngIf="fc.lastName.errors?.minlength">
+          Este campo requiere mas de 3 caracteres.
+        </mat-error>
+      </ng-container>
+    </mat-form-field>
+    <mat-form-field appearance="legacy" class="input-form">
+      <mat-label>Edad:</mat-label>
+      <input matInput formControlName="age">
+      <ng-container *ngIf="fc.age.invalid &&(fc.age.dirty || fc.age.touched)">
+        <mat-error *ngIf="fc.age.errors?.required">
+          Este campo es requerido.
+        </mat-error>
+        <mat-error *ngIf="fc.age.errors?.min || fc.age.errors?.max">
+          Este campo requiere valores entre 1 y 90.
+        </mat-error>
+      </ng-container>
+    </mat-form-field>
+  <div>
+    <button mat-button (click)="goToBack()">Volver</button>
+    <button mat-button color="primary" (click)="save()"
+    [disabled]="formPerson.invalid || loading">Guardar</button>
+  </div>
+</mat-card>
+<mat-spinner *ngIf="loading" style="margin: 0px auto"></mat-spinner>
+
+<p>Form value: {{formPerson.value | json}}</p>
+<p>Form status: {{formPerson.status}}</p>

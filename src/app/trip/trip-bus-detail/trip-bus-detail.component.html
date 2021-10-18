@@ -1,0 +1,37 @@
+<h1>Detalles del Colectivo</h1>
+<mat-card [formGroup]="formBus" *ngIf="!loading">
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>ID:</mat-label>
+    <input readonly matInput formControlName="id">
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Numero de patente:</mat-label>
+    <input readonly matInput formControlName="licensePlate">
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Cantidad de asientos:</mat-label>
+    <input readonly matInput formControlName="numberOfSeats">
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Marca del colectivo:</mat-label>
+    <input readonly matInput formControlName="marca">
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Modelo del colectivo:</mat-label>
+    <input readonly matInput formControlName="model">
+  </mat-form-field>
+
+  <div>
+    <button mat-button (click)="goToBack()">Volver</button>
+  </div>
+
+</mat-card>
+<mat-spinner *ngIf="loading" style="margin: 0px auto"></mat-spinner>
+
+<!--<p>Form value: {{formBus.value | json}}</p>-->
+<!--<p>Form status: {{formBus.status}}</p>-->

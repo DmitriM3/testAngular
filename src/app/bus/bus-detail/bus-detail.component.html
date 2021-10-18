@@ -1,0 +1,79 @@
+<!--<p>bus-detail works!</p>-->
+<mat-card [formGroup]="formBus" *ngIf="!loading">
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Numero de patente:</mat-label>
+    <input matInput formControlName="licensePlate">
+    <ng-container *ngIf="fc.licensePlate.invalid &&(fc.licensePlate.dirty || fc.licensePlate.touched)">
+      <mat-error *ngIf="fc.licensePlate.errors?.required">
+        Este campo es requerido.
+      </mat-error>
+      <mat-error *ngIf="fc.licensePlate.errors?.minlength || fc.licensePlate.errors?.maxlength">
+        Este campo requiere una patente de 6 o 7 caracteres.
+      </mat-error>
+    </ng-container>
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Cantidad de asientos:</mat-label>
+    <input type="number" matInput formControlName="numberOfSeats">
+    <ng-container *ngIf="fc.numberOfSeats.invalid &&(fc.numberOfSeats.dirty || fc.numberOfSeats.touched)">
+      <mat-error *ngIf="fc.numberOfSeats.errors?.required">
+        Este campo es requerido.
+      </mat-error>
+      <mat-error *ngIf="fc.numberOfSeats.errors?.min || fc.numberOfSeats.errors?.max">
+        Este campo requiere valores entre 1 y 90.
+      </mat-error>
+    </ng-container>
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Marca del colectivo</mat-label>
+    <mat-select matInput
+                [ngModel]
+                food="marca" formControlName="marca">
+      <mat-option *ngFor="let marca of brands" [value]="marca.name" (onSelectionChange)="findModels(marca.id)"
+                  (onSelectionChange)="createBrand(marca.id,marca.name,marca.models)">
+        {{marca.name}}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="formBus.controls['marca'].hasError('required') && formBus.controls['marca'].pristine">
+      Debe seleccionar una marca.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+<!--  <mat-label>Marca del colectivo:</mat-label>-->
+  <input readonly matInput formControlName="brand">
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Modelo del colectivo</mat-label>
+    <mat-select matInput
+                [ngModel]
+                food="model" formControlName="model">
+      <mat-option  *ngFor="let model of models" [value]="model.name" (onSelectionChange)="createModel(model.id,model.name,model.brand)">
+        {{model.name}}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="formBus.controls['model'].hasError('required') && formBus.controls['model'].pristine">
+      Debe seleccionar un modelo.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="legacy" class="input-form">
+<!--    <mat-label>Modelo del colectivo:</mat-label>-->
+    <input readonly matInput formControlName="modelo">
+  </mat-form-field>
+
+
+  <div>
+    <button mat-button (click)="goToBack()">Volver</button>
+    <button mat-button color="primary" (click)="save()"
+            [disabled]="formBus.invalid || loading">Guardar</button>
+  </div>
+</mat-card>
+<mat-spinner *ngIf="loading" style="margin: 0px auto"></mat-spinner>
+
+<p>Form value: {{formBus.value | json}}</p>
+<p>Form status: {{formBus.status}}</p>

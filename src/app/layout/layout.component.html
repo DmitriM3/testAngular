@@ -1,0 +1,27 @@
+
+<mat-toolbar color="primary" style="justify-content: space-between;">
+  <button mat-icon-button (click)="toggleMenu()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  {{title}}
+  <div *ngIf="authenticationService.isLoggedIn()" style="align-items: center;display: flex;">
+    <span>{{(authenticationService.loggedIn | async)?.username}}</span>
+    <button mat-icon-button (click)="logOut()" matTooltip="Cerrar sesión">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav
+    #sidenav
+    fixedInViewport="false"
+    mode="side"
+    opened="{{ isExpanded }}">
+    <sidenav [isExpanded]="isExpanded"></sidenav>
+  </mat-sidenav>
+  <mat-sidenav-content [style.margin-left.px]="!isExpanded ? 60 : 250">
+    <div class="content-container">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
