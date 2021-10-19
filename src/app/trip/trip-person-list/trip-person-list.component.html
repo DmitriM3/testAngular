@@ -8,14 +8,11 @@
                     [checked]="selection.hasValue() && isAllSelected()"
                     [indeterminate]="selection.hasValue() && !isAllSelected()"
                     [aria-label]="checkboxLabel()">
-        // crear metodo para pasarle a un (change) y que me vaya guardando las personas seleccionadas de la tabla
-
-
       </mat-checkbox>
     </th>
     <td mat-cell *matCellDef="let row">
-      <mat-checkbox (click)="$event.stopPropagation()"
-                    (change)="click(row)"
+      <mat-checkbox #checkBox [value]="row" (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null; getCheckbox(row)"
                     [checked]="selection.isSelected(row)"
                     [aria-label]="checkboxLabel(row)">
       </mat-checkbox>
@@ -56,7 +53,14 @@
 <div>
   <button mat-button (click)="goToBack()">Volver</button>
 </div>
+<!--Boton para imprimir por consola las personas que agrego por check de tabla-->
+<div>
+  <button mat-button (click)="save()">Borrar personas seleccionadas y Guardar</button>
+</div>
 
 <!--<p>Form value: {{formTrip.value | json}}</p>-->
 <!--<p>Form status: {{formTrip.status}}</p>-->
 <p>Personas : {{persons | json}}</p>
+
+<span> selected persons :: <strong>   {{this.selection.selected | json}} </strong> :</span>
+

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -7,6 +7,8 @@ import {Person} from "../../domain/person";
 import {Trip} from "../../domain/trip";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {persons} from "../../persons-administration/person.service";
+import {Bus} from "../../domain/bus";
 
 
 
@@ -16,12 +18,13 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./trip-person-list.component.css']
 })
 export class TripPersonListComponent implements OnInit {
+  @ViewChildren ('checkBox') checkBox:QueryList<any>;
   personsSelected: Person[] = [];
   persons: Person[] = [];
   displayedColumns: string[] = ['select', 'id', 'firstName', 'lastName', 'age'];
-  // dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+
   dataSource = new MatTableDataSource<Person>(this.persons);
-  // selection = new SelectionModel<PeriodicElement>(true, []);
+
   selection = new SelectionModel<Person>(true, []);
   formTrip: FormGroup = this.fb.group({
     id: [null, []],
@@ -45,7 +48,6 @@ export class TripPersonListComponent implements OnInit {
       this.selection.clear();
       return;
     }
-
     this.selection.select(...this.dataSource.data);
   }
   /** The label for the checkbox on the passed row */
@@ -55,6 +57,23 @@ export class TripPersonListComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
   }
+
+  checked = [];
+  ps: Person[];
+  getCheckbox(checkbox){
+    console.log(this.selection.selected);
+    this.checked = [];
+    this.ps = [];
+    const checked = this.checkBox.filter(checkbox => checkbox.checked);
+    checked.forEach(data => {
+      this.checked.push ({
+        'checked' : data.checked,
+        'value':  data.value
+      })
+    })
+
+  }
+
   loading: boolean = false;
   constructor(public route: ActivatedRoute,
               public tripService: TripService,
@@ -102,15 +121,40 @@ export class TripPersonListComponent implements OnInit {
     this.router.navigate(['trips', 'list']);
   }
 
-  selected: Person[] = [];
+  generateRemainingPersons() {
+    console.log(this.selection.selected)
+    //Removing the element 2
+    this.personsSelected = this.persons;
+    this.personsSelected.forEach((element1,index1)=>{
+      this.selection.selected.forEach((element2,index2)=>{
+        if(element1==element2) delete this.personsSelected[index1];
+      })
+    });
+    console.log(this.personsSelected)
+  }
 
-  click(person: any) {
-    if(person != null) {
-      this.selected.push(person);
-    } else {
-      let index = this.selected.indexOf(person);
-      this.selected.splice(index, 1);
+  save() {
+    this.generateRemainingPersons();
+    const trip = new Trip(
+      this.formTrip.get(["id"])?.value,
+      this.formTrip.get(["departure"])?.value,
+      this.formTrip.get(["destination"])?.value,
+      this.formTrip.get(["startDate"])?.value,
+      this.formTrip.get(["endDate"])?.value,
+      this.formTrip.get(["bus"])?.value,
+      this.personsSelected,
+    );
+    if (trip.id != null) {
+      this.tripService.update(trip).subscribe(p => {
+          this.snackBar.open("Se actualizo con exito", "Éxito", { duration: 2000 });
+          this.goToBack();
+        },
+        error => {
+          this.snackBar.open(error, "Error", { duration: 2000 });
+        }
+      )
     }
+    this.router.navigate(['trips', 'list']);
   }
 
 

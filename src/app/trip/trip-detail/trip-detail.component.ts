@@ -73,6 +73,7 @@ export class TripDetailComponent implements OnInit {
     if (trip != null) {
       const startdate = new Date(trip.startDate * 1000);
       const enddate = new Date(trip.endDate * 1000);
+
       this.formTrip.patchValue({
         id: trip.id,
         origen: trip.departure,
