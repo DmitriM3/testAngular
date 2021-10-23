@@ -14,12 +14,11 @@ import {DeleteConfirmDialogComponent} from "../../dialog/delete-confirm-dialog/d
 })
 export class BusListComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'licensePlate', 'numberOfSeats', 'model_id', 'model_name',
-  'brand_id','brand_name','brand_model','option'];
-
+  displayedColumns: string[] = ['id', 'licensePlate', 'numberOfSeats','brand_name', 'model_name',
+    'option'];
+  // displayedColumns: string[] = ['id', 'licensePlate', 'numberOfSeats', 'model_id', 'model_name',
+  //   'brand_id','brand_name','brand_model','option'];
   buses: Bus[] = [];
-
-
   loading: boolean = false;
 
   constructor(public router: Router,

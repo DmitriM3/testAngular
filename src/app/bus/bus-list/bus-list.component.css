@@ -9,3 +9,7 @@
   width: 100%;
   text-align: center;
 }
+.bus-container {
+  height: 500px;
+  overflow: auto;
+}
