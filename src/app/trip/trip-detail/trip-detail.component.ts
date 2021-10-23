@@ -135,13 +135,13 @@ export class TripDetailComponent implements OnInit {
     if ( (this.formTrip.get(["id"])?.value == null) && (this.personsSelection.selected != null) ){
       this.personsOnTripNewValue = this.personsSelection.selected;
     }
-    if (this.newBusEdit == null){
-      this.newBusEdit = this.formTrip.get(['bus'])?.value;
-    }
   }
 
   save() {
     this.generateNewListTripPersons();
+    if (this.newBusEdit == null){
+      this.newBusEdit = this.formTrip.get(['bus'])?.value;
+    }
     const trip = new Trip(
       this.formTrip.get(["id"])?.value,
       this.formTrip.get(["departure"])?.value,
@@ -149,7 +149,6 @@ export class TripDetailComponent implements OnInit {
       this.formTrip.get(["startDate"])?.value.getTime() / 1000,
       this.formTrip.get(["endDate"])?.value.getTime() / 1000,
       this.newBusEdit, this.personsOnTripNewValue);
-    console.log(trip);
     if (this.personsOnTripNewValue.length > this.newBusEdit.numberOfSeats){
       console.log("La cantidad de asientos es menor a la cantidad de pasajeros");
       this.snackBar.open("La cantidad de asientos es menor a la cantidad de pasajeros totales", "Error", { duration: 3000 });
@@ -197,8 +196,7 @@ export class TripDetailComponent implements OnInit {
   }
 
   createBus(id: number, licensePlate: string, numberOfSeats: number, model: Model) {
-    this.newBusEdit = new Bus(id,licensePlate,numberOfSeats,model)
-
+    this.newBusEdit = this.busService.createBus(id,licensePlate,numberOfSeats,model);
   }
 
 }

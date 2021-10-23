@@ -91,4 +91,7 @@ export class BusService {
   createModel(id: number, name: string, brandSelected: Brand) {
     return new Model(id,name,brandSelected);
   }
+  createBus(id: number, licensePlate: string, numberOfSeats: number, model: Model){
+    return new Bus(id,licensePlate,numberOfSeats,model);
+  }
 }

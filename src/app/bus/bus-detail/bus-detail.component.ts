@@ -140,7 +140,6 @@ export class BusDetailComponent implements OnInit {
 
   createModel(id: number, name: string, brand: Brand) {
     this.modelSelected = this.busService.createModel(id,name,this.brandSelected);
-
   }
 
   public compareObjects(onombre1: any, onombre2: any): boolean {

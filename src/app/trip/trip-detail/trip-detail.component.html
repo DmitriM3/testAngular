@@ -35,13 +35,6 @@
     </ng-container>
   </mat-form-field>
 
-<!--  <mat-form-field>-->
-<!--    <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date & time" formControlName="startDate">-->
-<!--    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
-<!--    <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>-->
-<!--  </mat-form-field>-->
-
-
 <!--  FECHA LLEGADA-->
   <mat-form-field appearance="legacy" class="input-form">
     <mat-label>Fecha de llegada:</mat-label>
@@ -55,14 +48,12 @@
     </ng-container>
   </mat-form-field>
 
-
-
-
+  <!-- BUS SELECTION-->
   <mat-form-field appearance="legacy" class="input-form">
     <mat-label>Colectivo</mat-label>
     <mat-select class="busSelect" formControlName="bus" [compareWith]="compareObjects">
       <mat-option *ngFor="let bus of buses" [value]="bus"
-                  (onSelectionChange)="createBus(bus.id,bus.licensePlate,bus.numberOfSeats,bus.model)">
+                  (select)="createBus(bus.id,bus.licensePlate,bus.numberOfSeats,bus.model)">
         {{'Marca: '}}<strong>{{bus.model.brand.name}}</strong>
         {{'- Modelo: '}} <strong>{{bus.model.name}}</strong>
         {{'- Patente: '}} <strong>{{bus.licensePlate}}</strong>
@@ -74,8 +65,7 @@
     </mat-error>
   </mat-form-field>
 
-  <!-- BUS SECTION -->
-
+  <!-- BUS SELECTION WITH TABLE-->
 <!--  <div style="margin-top: 20px">-->
 <!--  <mat-label>Colectivo:</mat-label>-->
 <!--  <div class="bus-container mat-elevation-z8">-->
@@ -112,7 +102,6 @@
 <!--  </table>-->
 <!--  </div>-->
 <!--  </div>-->
-
   <!-- END BUS SECTION -->
 
   <!-- PERSONS SECTION -->
