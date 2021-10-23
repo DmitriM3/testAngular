@@ -1,5 +1,6 @@
 <h1>Pasajeros del colectivo ID: {{this.formTrip.get('id')?.value}} </h1>
-<table mat-table [dataSource]="persons" class="mat-elevation-z8">
+<h3>Seleccione pasajeros para removerlos del viaje </h3>
+<table mat-table [dataSource]="personsOnTrip" class="mat-elevation-z8">
 
   <!-- Checkbox Column -->
   <ng-container matColumnDef="select">
@@ -52,15 +53,13 @@
 
 <div>
   <button mat-button (click)="goToBack()">Volver</button>
-</div>
-<!--Boton para remover personas seleccionadas de la lista y guardarlas en el viaje-->
-<div>
-  <button mat-button (click)="save()">Borrar personas seleccionadas y Guardar</button>
+
+  <button  style="color: darkred" mat-button (click)="save()">Borrar personas seleccionadas y Guardar</button>
 </div>
 
 <!--<p>Form value: {{formTrip.value | json}}</p>-->
 <!--<p>Form status: {{formTrip.status}}</p>-->
-<p>Personas : {{persons | json}}</p>
+<!--<p>Personas : {{personsOnTrip | json}}</p>-->
 
-<span> selected persons :: <strong>   {{this.selection.selected | json}} </strong> :</span>
+<!--<span> selected persons :: <strong>   {{this.selection.selected | json}} </strong> :</span>-->
 

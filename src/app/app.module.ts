@@ -14,6 +14,8 @@ import { TokenInterceptor } from './security/interceptor/token-interceptor';
 import { AuthenticationService } from './security/service/authentication.service';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import {BusModule} from "./bus/bus.module";
+import {NgxMatDatetimePickerModule, NgxMatNativeDateModule} from "@angular-material-components/datetime-picker";
+import {NgxMatTimepickerModule} from "ngx-mat-timepicker";
 
 @NgModule({
   declarations: [

@@ -4,7 +4,6 @@ import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
 import {TripService} from "../trip.service";
-import {Person} from "../../domain/person";
 
 @Component({
   selector: 'app-trip-list',
@@ -18,8 +17,6 @@ export class TripListComponent implements OnInit {
 
   trips: Trip[] = [];
   loading: boolean = false;
-
-
 
   constructor(public router: Router,
               private tripService: TripService,
@@ -44,9 +41,29 @@ export class TripListComponent implements OnInit {
       this.router.navigate(['trips', 'trip-detail', {id: t.id}]);
   }
 
-  delete(id: number) {
-
-  }
+  // delete(id: number)  {
+  //   let dialogData = new DialogData(null,
+  //     "¿Está seguro que desea eliminar el viaje?", "Confirmación para eliminar");
+  //   const dialogRef = this.dialog.open(DeleteConfirmDialogComponent, {
+  //     width: '300px',
+  //     height: 'auto',
+  //     minHeight: 200,
+  //     data: dialogData
+  //   });
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result.event == 'delete') {
+  //       this.loading = true;
+  //       this.tripService.delete(id).subscribe(p => {
+  //           this.findAll()
+  //           this.snackBar.open("El colectivo se elimino con exito", 'Éxito', {duration: 2000});
+  //         },
+  //         error => {
+  //           this.snackBar.open(error, "Error", {duration: 2000});
+  //           this.loading = false;
+  //         });
+  //     }
+  //   });
+  // }
 
   goToPassengersDetail(t: Trip | null) {
     if (t == null)

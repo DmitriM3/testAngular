@@ -12,6 +12,6 @@ export class SidenavComponent {
     {link: "home", name: "Inicio", icon: "home"},
     {link: "persons", name: "Personas", icon: "people"},
     {link: "buses", name: "Colectivos", icon: "directions_bus"},
-    {link: "trips", name: "Viajes", icon: "flight"},
+    {link: "trips", name: "Viajes", icon: "card_travel"},
   ];
 }

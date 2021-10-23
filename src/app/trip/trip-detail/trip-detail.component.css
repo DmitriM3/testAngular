@@ -2,5 +2,30 @@
   display: flex;
 }
 mat-card{
-  width: 50%;
+  width: 75%;
+}
+table {
+  width: 100%;
+}
+.mat-row.hovered {
+  background: #eee;
+}
+.busSelect{
+  width: 600px;
+}
+.mat-row.highlighted {
+  background: #999;
+}
+.bus-container {
+  margin-top: 25px;
+  height: 400px;
+  overflow: auto;
+}
+.persons-container {
+  margin-top: 25px;
+  height: 400px;
+  overflow: auto;
+}
+.button-container{
+  margin-top: 20px;
 }

@@ -8,3 +8,8 @@
   width: 100%;
   text-align: center;
 }
+.trips-container {
+  /*margin-top: 25px;*/
+  height: 600px;
+  overflow: auto;
+}

@@ -6,8 +6,8 @@ import {Brand} from "../domain/brand";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Trip} from "../domain/trip";
-import {Observable, pipe, throwError} from "rxjs";
-import {Person} from "../domain/person";
+import {Observable, throwError} from "rxjs";
+
 
 
 @Injectable({
@@ -45,33 +45,6 @@ export class TripService {
           t.passengers)));
   }
 
-  findAllPersonsTrip(id: number): Observable<Person[]> {
-    return this.http.get<Person[]>(this.resourceTripUrl + "/" + id)
-      .pipe(map(trip =>
-        trip.map(t => {
-          return new Person(t.id,t.firstName,t.lastName,t.age);
-        })));
-  }
-
-  // public findAllPersonsTrip(id: number):  {
-  //   return this.http.get<Person[]>(this.resourceTripUrl + "/" + id)
-  //   .pipe(map(trip =>
-  //   trip.map(t => {
-  //   return new Trip(t.id, t.departure, t.destination,t.startDate, t.endDate,
-  //   new Bus(t.bus.id, t.bus.licensePlate, t.bus.numberOfSeats,
-  //   new Model(t.bus.model.id, t.bus.model.name,
-  //   new Brand(t.bus.model.brand.id, t.bus.model.brand.name, t.bus.model.brand.models))),
-  //   t.passengers);
-  // })));
-  //
-  //
-  //   // return this.http.get<Person[]>(this.resourceTripUrl + "/" + id)
-  //   //   .pipe(map(persons =>
-  //   //     persons.map(p => new Person(p.id,
-  //   //       p.firstName, p.lastName, p.age)
-  //   //     )));
-  // }
-
   update(trip: Trip) {
     return this.http.put<any>(this.resourceTripUrl, trip).pipe(
       catchError(error => {
@@ -87,4 +60,5 @@ export class TripService {
         return throwError("El viaje no pudo ser creado.");
       }));
   }
+
 }

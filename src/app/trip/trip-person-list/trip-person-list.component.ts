@@ -20,10 +20,10 @@ import {Bus} from "../../domain/bus";
 export class TripPersonListComponent implements OnInit {
   @ViewChildren ('checkBox') checkBox:QueryList<any>;
   personsSelected: Person[] = [];
-  persons: Person[] = [];
+  personsOnTrip: Person[] = [];
   displayedColumns: string[] = ['select', 'id', 'firstName', 'lastName', 'age'];
 
-  dataSource = new MatTableDataSource<Person>(this.persons);
+  dataSource = new MatTableDataSource<Person>(this.personsOnTrip);
 
   selection = new SelectionModel<Person>(true, []);
   formTrip: FormGroup = this.fb.group({
@@ -89,7 +89,7 @@ export class TripPersonListComponent implements OnInit {
         const id = parseInt(paramId);
         this.tripService.findTrip(id).subscribe(trip => {
             this.buildForm(trip);
-            this.persons = this.formTrip.get('passengers')?.value;
+            this.personsOnTrip = this.formTrip.get('passengers')?.value;
             this.loading = false;
           },
           error => {
@@ -123,8 +123,10 @@ export class TripPersonListComponent implements OnInit {
 
   generateRemainingPersons() {
     console.log(this.selection.selected)
-    //Removing the element 2
-    this.personsSelected = this.persons;
+    this.personsSelected = this.personsOnTrip;
+    console.log(this.personsSelected);
+    console.log(this.selection.selected);
+    //Removiendo personas seleccionadas de la lista de pasajeros
     this.personsSelected.forEach((element1,index1)=>{
       this.selection.selected.forEach((element2,index2)=>{
         if(element1==element2) delete this.personsSelected[index1];
@@ -144,6 +146,7 @@ export class TripPersonListComponent implements OnInit {
       this.formTrip.get(["bus"])?.value,
       this.personsSelected,
     );
+    console.log(trip);
     if (trip.id != null) {
       this.tripService.update(trip).subscribe(p => {
           this.snackBar.open("Se actualizo con exito", "Éxito", { duration: 2000 });

@@ -3,9 +3,9 @@
 <!--CIUDAD ORIGEN-->
   <mat-form-field appearance="legacy" class="input-form">
     <mat-label>Ciudad Origen:</mat-label>
-    <input matInput formControlName="origen">
-    <ng-container *ngIf="fc.origen.invalid &&(fc.origen.dirty || fc.origen.touched)">
-      <mat-error *ngIf="fc.origen.errors?.required">
+    <input matInput formControlName="departure">
+    <ng-container *ngIf="fc.departure.invalid &&(fc.departure.dirty || fc.departure.touched)">
+      <mat-error *ngIf="fc.departure.errors?.required">
         Este campo es requerido.
       </mat-error>
     </ng-container>
@@ -35,10 +35,17 @@
     </ng-container>
   </mat-form-field>
 
+<!--  <mat-form-field>-->
+<!--    <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date & time" formControlName="startDate">-->
+<!--    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
+<!--    <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>-->
+<!--  </mat-form-field>-->
+
+
 <!--  FECHA LLEGADA-->
   <mat-form-field appearance="legacy" class="input-form">
     <mat-label>Fecha de llegada:</mat-label>
-    <input matInput [matDatepicker]="pickerStartDate" formControlName="endDate">
+    <input matInput [matDatepicker]="pickerEndDate" formControlName="endDate">
     <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
     <mat-datepicker #pickerEndDate></mat-datepicker>
     <ng-container *ngIf="fc.endDate.invalid &&(fc.endDate.dirty || fc.endDate.touched)">
@@ -48,18 +55,106 @@
     </ng-container>
   </mat-form-field>
 
-<!-- Bus Section -->
 
-<!-- End Bus Section -->
 
-  <div>
+
+  <mat-form-field appearance="legacy" class="input-form">
+    <mat-label>Colectivo</mat-label>
+    <mat-select class="busSelect" formControlName="bus" [compareWith]="compareObjects">
+      <mat-option *ngFor="let bus of buses" [value]="bus"
+                  (onSelectionChange)="createBus(bus.id,bus.licensePlate,bus.numberOfSeats,bus.model)">
+        {{'Marca: '}}<strong>{{bus.model.brand.name}}</strong>
+        {{'- Modelo: '}} <strong>{{bus.model.name}}</strong>
+        {{'- Patente: '}} <strong>{{bus.licensePlate}}</strong>
+        {{'- Asientos: '}} <strong>{{bus.numberOfSeats}}</strong>
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="formTrip.controls['bus'].hasError('required') && formTrip.controls['bus'].pristine">
+      Debe seleccionar un colectivo.
+    </mat-error>
+  </mat-form-field>
+
+  <!-- BUS SECTION -->
+
+<!--  <div style="margin-top: 20px">-->
+<!--  <mat-label>Colectivo:</mat-label>-->
+<!--  <div class="bus-container mat-elevation-z8">-->
+<!--  <table mat-table [dataSource]="buses" formControlName="bus" class="mat-elevation-z8">-->
+
+<!--    <ng-container matColumnDef="marca">-->
+<!--      <th mat-header-cell *matHeaderCellDef> Marca </th>-->
+<!--      <td mat-cell *matCellDef="let element"> {{element.model.brand.name}} </td>-->
+<!--    </ng-container>-->
+
+<!--    <ng-container matColumnDef="modelo">-->
+<!--      <th mat-header-cell *matHeaderCellDef> Modelo </th>-->
+<!--      <td mat-cell *matCellDef="let element"> {{element.model.name}} </td>-->
+<!--    </ng-container>-->
+
+<!--    <ng-container matColumnDef="patente">-->
+<!--      <th mat-header-cell *matHeaderCellDef> Patente </th>-->
+<!--      <td mat-cell *matCellDef="let element"> {{element.licensePlate}} </td>-->
+<!--    </ng-container>-->
+
+<!--    <ng-container matColumnDef="numberofSeats">-->
+<!--      <th mat-header-cell *matHeaderCellDef> Cantidad de asientos </th>-->
+<!--      <td mat-cell *matCellDef="let element"> {{element.numberOfSeats}} </td>-->
+<!--    </ng-container>-->
+<!--    <mat-error *ngIf="formTrip.controls['bus'].hasError('required') && formTrip.controls['bus'].pristine">-->
+<!--      Debe seleccionar un colectivo.-->
+<!--    </mat-error>-->
+<!--    <tr mat-header-row *matHeaderRowDef="busDisplayedColumns"></tr>-->
+<!--    <tr mat-row *matRowDef="let row; columns: busDisplayedColumns;"-->
+<!--        (click)="busSelection.toggle(row)"-->
+<!--        [ngClass]="{hovered: row.hovered, highlighted: busSelection.isSelected(row)}"-->
+<!--        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">-->
+<!--    </tr>-->
+<!--  </table>-->
+<!--  </div>-->
+<!--  </div>-->
+
+  <!-- END BUS SECTION -->
+
+  <!-- PERSONS SECTION -->
+  <div style="margin-top: 20px">
+  <mat-label >Personas:</mat-label>
+  <div class="persons-container mat-elevation-z8">
+    <table mat-table [dataSource]="allPersons" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+        <td mat-cell *matCellDef="let person"> {{person.firstName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="apellido">
+        <th mat-header-cell *matHeaderCellDef> Apellido </th>
+        <td mat-cell *matCellDef="let person"> {{person.lastName}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="personDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: personDisplayedColumns;"
+          (click)="personsSelection.toggle(row)"
+          [ngClass]="{highlighted: personsSelection.isSelected(row)}">
+      </tr>
+    </table>
+  </div>
+  </div>
+
+  <!-- END PERSONS SECTION -->
+
+  <div class="button-container">
     <button mat-button (click)="goToBack()">Volver</button>
     <button mat-button color="primary" (click)="save()"
             [disabled]="formTrip.invalid || loading">Guardar</button>
   </div>
 </mat-card>
+
 <mat-spinner *ngIf="loading" style="margin: 0px auto"></mat-spinner>
 
-<p>Form value: {{formTrip.value | json}}</p>
-<p>Form status: {{formTrip.status}}</p>
-
+<!--<span> Colectivo seleccionado : <strong>   {{this.newBusEdit | json}} </strong> :</span><br>-->
+<!--<span> Personas en el viaje : <strong>   {{this.personasEnElViaje | json}} </strong> :</span><br>-->
+<!--<span> Todas las personas : <strong>   {{this.allPersons | json}} </strong> :</span><br>-->
+<!--<span> Personas a la lista : <strong>   {{this.personsOnList | json}} </strong> :</span><br>-->
+<!--<p>Form value: {{formTrip.value | json}}</p>-->
+<!--<p>Form status: {{formTrip.status}}</p>-->
+<!--<span> selected persons :: <strong>   {{this.personsSelection.selected | json}} </strong> :</span>-->

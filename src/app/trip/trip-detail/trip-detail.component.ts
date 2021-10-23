@@ -5,9 +5,12 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Trip} from "../../domain/trip";
 import {TripService} from "../trip.service";
 import {BusService} from "../../bus/bus.service";
-import {Brand} from "../../domain/brand";
-import {Model} from "../../domain/model";
 import {Bus} from "../../domain/bus";
+import {MatTableDataSource} from "@angular/material/table";
+import {SelectionModel} from "@angular/cdk/collections";
+import {Person} from "../../domain/person";
+import {PersonService} from "../../person/person.service";
+import {Model} from "../../domain/model";
 
 @Component({
   selector: 'app-trip-detail',
@@ -18,40 +21,57 @@ export class TripDetailComponent implements OnInit {
 
   formTrip: FormGroup = this.fb.group({
     id: [null, []],
-    origen: ['', [Validators.required]],
+    departure: ['', [Validators.required]],
     destination: ['', [Validators.required]],
     startDate: ['', [Validators.required]],
+    timeStart: ['', [Validators.required]],
     endDate: ['', [Validators.required]],
+    timeEnd: ['', [Validators.required]],
     bus: ['', [Validators.required]],
     passengers: [''],
-    modelo: [''],
-    brand: [''],
   })
+
+  buses: Bus[] = [];
+  busDisplayedColumns: string[] = ['marca', 'modelo', 'patente', 'numberofSeats'];
+  busDataSource = new MatTableDataSource<Bus>(this.buses);
+  busSelection = new SelectionModel<Bus>(false, []);
+
+  allPersons: Person[] = [];
+  personsOnList: Person[] = [];
+  personasEnElViaje: Person[] = [];
+  personsOnTripNewValue: Person[] = [];
+  personDisplayedColumns: string[] = ['nombre', 'apellido'];
+  personDataSource = new MatTableDataSource<Person>(this.allPersons);
+  personsSelection = new SelectionModel<Person>(true, []);
+
+
   loading: boolean = false;
-  brands: Brand[] = [];
-  models: Model[] = [];
-  // @ts-ignore
-  brandSelected: Brand;
-  // @ts-ignore
-  modelSelected: Model;
-  bus!: Bus | null;
+  newBusEdit: Bus;
+  myDatePicker: any;
+
+
 
   constructor(public route: ActivatedRoute,
               public tripService: TripService,
               public busService: BusService,
+              public personService: PersonService,
               public fb: FormBuilder,
               public router: Router,
               private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
+
     this.route.paramMap.subscribe(param => {
       this.loading = true;
       let paramId = param.get("id");
+      this.findAllBuses();
+      this.findAllPersons();
       if (paramId != null) {
         const id = parseInt(paramId);
-        this.tripService.findTrip(id).subscribe(bus => {
-            this.buildForm(bus);
-            // this.bus = bus;
+        this.tripService.findTrip(id).subscribe(trip => {
+            this.buildForm(trip);
+            // this.personasEnElViaje = this.formTrip.get('passengers').value;
+            // this.personsOnList = this.allPersons;
             this.loading = false;
           },
           error => {
@@ -64,63 +84,126 @@ export class TripDetailComponent implements OnInit {
         this.loading = false;
       }
     });
-    this.busService.findAllBrands().subscribe(list => {
-      this.brands = list;
+  }
+
+  findAllBuses() {
+    this.busService.findAll().subscribe(list => {
+      this.buses = list;
+      this.loading = false;
+    });
+  }
+  findAllPersons() {
+    this.personService.findAll().subscribe(list => {
+      this.allPersons = list;
+      this.loading = false;
     });
   }
 
   buildForm(trip: Trip | null) {
     if (trip != null) {
-      const startdate = new Date(trip.startDate * 1000);
-      const enddate = new Date(trip.endDate * 1000);
+      const startDate = new Date(trip.startDate * 1000);
+      const endDate = new Date(trip.endDate * 1000);
+      console.log(startDate.getHours());
 
       this.formTrip.patchValue({
         id: trip.id,
-        origen: trip.departure,
+        departure: trip.departure,
         destination: trip.destination,
-        startDate: startdate,
-        endDate: enddate,
+        startDate: startDate,
+        endDate: endDate,
+        timeStart: startDate.getTime()+startDate.getHours()+startDate.getMinutes(),
+        timeEnd: endDate.getTime()+endDate.getHours()+endDate.getMinutes(),
         bus: trip.bus,
         passengers: trip.passengers,
-        modelo: trip.bus.model.name,
-        brand: trip.bus.model.brand.name
-      })
+      });
+      this.personasEnElViaje = this.formTrip.get('passengers')?.value;
     }
+    this.personsOnList = this.allPersons;
+  }
+
+  private restartArray(all: Person[], inTrip: Person[]) {
+
+    all.forEach((element1,index1)=>{
+      inTrip.forEach((element2, index2)=>{
+        if(element1!=element2) delete all[index2];
+      })
+    });
+    console.log(all);
+    this.allPersons = all;
+    console.log(this.allPersons);
   }
 
   public get fc() {
     return this.formTrip.controls;
   }
 
-  save() {
-    if (this.modelSelected == null){
-      this.modelSelected = this.formTrip.get(['model'])?.value;
+
+
+  generateNewListPersons() {
+    console.log(this.personsSelection.selected)
+    this.personsOnTripNewValue = this.personasEnElViaje;
+    this.personsSelection.selected.forEach((element1,index1)=>{
+      this.personasEnElViaje.forEach((element2, index2)=>{
+        if(element1!=element2) this.personsSelection.selected.push(element2);
+      })
+    });
+    console.log(this.personsSelection.selected);
+    this.personsOnTripNewValue = this.personsSelection.selected;
+  }
+
+  generarNuevaListadoDePersonas(){
+    if ( this.formTrip.get(["id"])?.value != null ){
+      this.generateNewListPersons();
     }
+    if ( (this.formTrip.get(["id"])?.value == null) && (this.personsSelection.selected == null) ){
+      this.personsOnTripNewValue = [];
+    }
+    if ( (this.formTrip.get(["id"])?.value == null) && (this.personsSelection.selected != null) ){
+      this.personsOnTripNewValue = this.personsSelection.selected;
+    }
+    if (this.newBusEdit == null){
+      this.newBusEdit = this.formTrip.get(['bus'])?.value;
+    }
+  }
+
+  save() {
+    this.generarNuevaListadoDePersonas();
     const trip = new Trip(
       this.formTrip.get(["id"])?.value,
-      this.formTrip.get(["origen"])?.value,
+      this.formTrip.get(["departure"])?.value,
       this.formTrip.get(["destination"])?.value,
-      this.formTrip.get(["startDate"])?.value,
-      this.formTrip.get(["endDate"])?.value, this.formTrip.get(["bus"])?.value, null);
-    if (trip.id != null) {
-      this.tripService.update(trip).subscribe(p => {
-          this.snackBar.open("La persona se actualizó con exito", "Éxito", { duration: 2000 });
-          this.goToBack();
-        },
-        error => {
-          this.snackBar.open(error, "Error", { duration: 2000 });
-        }
-      )
-    } else {
-      this.tripService.create(trip).subscribe(p => {
-          this.snackBar.open("La persona se creo con exito", "Éxito", { duration: 2000 });
-          this.goToBack();
-        },
-        error => {
-          this.snackBar.open(error, "Error", { duration: 2000 });
-          console.log(error)
-        }
-      )
+      this.formTrip.get(["startDate"])?.value.getTime() / 1000,
+      this.formTrip.get(["endDate"])?.value.getTime() / 1000,
+      this.newBusEdit, this.personsOnTripNewValue);
+    console.log(trip);
+    if (this.personsOnTripNewValue.length > this.newBusEdit.numberOfSeats){
+      console.log("La cantidad de asientos es menor a la cantidad de pasajeros");
+      this.snackBar.open("La cantidad de asientos es menor a la cantidad de pasajeros totales", "Error", { duration: 3000 });
+      this.returnToEdit(trip);
+    }
+    if (this.personsOnTripNewValue.length <= this.newBusEdit.numberOfSeats) {
+      if (trip.id != null) {
+        this.tripService.update(trip).subscribe(p => {
+            console.log("Se actualizo");
+            this.snackBar.open("El viaje se actualizo con exito", "Éxito", {duration: 2000});
+            this.goToBack();
+          },
+          error => {
+            this.snackBar.open(error, "Error", {duration: 2000});
+          }
+        )
+      } else {
+        this.tripService.create(trip).subscribe(p => {
+            console.log("Se creo");
+            this.snackBar.open("El viaje se creo con exito", "Éxito", {duration: 2000});
+            this.goToBack();
+          },
+          error => {
+            this.snackBar.open(error, "Error", {duration: 2000});
+            console.log(error)
+          }
+        )
+      }
     }
   }
 
@@ -128,18 +211,23 @@ export class TripDetailComponent implements OnInit {
     this.router.navigate(['trips', 'list']);
   }
 
-  findBusModels(id: number) {
-    this.busService.findAllModels(id).subscribe(list => {
-      this.models = list;
-      this.loading = false;
-    });
+  returnToEdit(t: Trip | null) {
+    if (t == null)
+      this.router.navigate(['trips', 'list']);
+    else
+      this.router.navigate(['trips', 'trip-detail-list', {id: t.id}]);
   }
 
-  createBrand(id: number, name: string, models: [string]) {
-    this.brandSelected = this.busService.createBrand(id, name, models);
+  public compareObjects(oName1: any, oName2: any): boolean {
+    return (oName1 && oName2 && (oName1.id === oName2.id));
   }
 
-  createModel(id: number, name: string, brand: Brand) {
-    this.modelSelected = this.busService.createModel(id,name,this.brandSelected);
+  createBus(id: number, licensePlate: string, numberOfSeats: number, model: Model) {
+    this.newBusEdit = new Bus(id,licensePlate,numberOfSeats,model)
+
+  }
+
+  getTime() {
+    return (this.formTrip.get(["startDate"])?.value.getTime() / 1000)
   }
 }
