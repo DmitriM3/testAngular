@@ -30,9 +30,9 @@ export class TripDetailComponent implements OnInit {
   })
 
   buses: Bus[] = [];
-  busDisplayedColumns: string[] = ['marca', 'modelo', 'patente', 'numberofSeats'];
-  busDataSource = new MatTableDataSource<Bus>(this.buses);
-  busSelection = new SelectionModel<Bus>(false, []);
+  // busDisplayedColumns: string[] = ['marca', 'modelo', 'patente', 'numberofSeats'];
+  // busDataSource = new MatTableDataSource<Bus>(this.buses);
+  // busSelection = new SelectionModel<Bus>(false, []);
 
   allPersons: Person[] = [];
   personsOnList: Person[] = [];
@@ -42,12 +42,8 @@ export class TripDetailComponent implements OnInit {
   personDataSource = new MatTableDataSource<Person>(this.allPersons);
   personsSelection = new SelectionModel<Person>(true, []);
 
-
   loading: boolean = false;
   newBusEdit: Bus;
-  myDatePicker: any;
-
-
 
   constructor(public route: ActivatedRoute,
               public tripService: TripService,
@@ -113,12 +109,11 @@ export class TripDetailComponent implements OnInit {
     this.personsOnList = this.allPersons;
   }
 
-
   public get fc() {
     return this.formTrip.controls;
   }
 
-  generateNewListPersons() {
+  generateTripPersons() {
     console.log(this.personsSelection.selected)
     this.personsOnTripNewValue = this.personasEnElViaje;
     this.personsSelection.selected.forEach((element1,index1)=>{
@@ -130,9 +125,9 @@ export class TripDetailComponent implements OnInit {
     this.personsOnTripNewValue = this.personsSelection.selected;
   }
 
-  generarNuevaListadoDePersonas(){
+  generateNewListTripPersons(){
     if ( this.formTrip.get(["id"])?.value != null ){
-      this.generateNewListPersons();
+      this.generateTripPersons();
     }
     if ( (this.formTrip.get(["id"])?.value == null) && (this.personsSelection.selected == null) ){
       this.personsOnTripNewValue = [];
@@ -146,7 +141,7 @@ export class TripDetailComponent implements OnInit {
   }
 
   save() {
-    this.generarNuevaListadoDePersonas();
+    this.generateNewListTripPersons();
     const trip = new Trip(
       this.formTrip.get(["id"])?.value,
       this.formTrip.get(["departure"])?.value,
