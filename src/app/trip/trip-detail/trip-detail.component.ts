@@ -24,9 +24,7 @@ export class TripDetailComponent implements OnInit {
     departure: ['', [Validators.required]],
     destination: ['', [Validators.required]],
     startDate: ['', [Validators.required]],
-    timeStart: ['', [Validators.required]],
     endDate: ['', [Validators.required]],
-    timeEnd: ['', [Validators.required]],
     bus: ['', [Validators.required]],
     passengers: [''],
   })
@@ -70,8 +68,6 @@ export class TripDetailComponent implements OnInit {
         const id = parseInt(paramId);
         this.tripService.findTrip(id).subscribe(trip => {
             this.buildForm(trip);
-            // this.personasEnElViaje = this.formTrip.get('passengers').value;
-            // this.personsOnList = this.allPersons;
             this.loading = false;
           },
           error => {
@@ -103,16 +99,12 @@ export class TripDetailComponent implements OnInit {
     if (trip != null) {
       const startDate = new Date(trip.startDate * 1000);
       const endDate = new Date(trip.endDate * 1000);
-      console.log(startDate.getHours());
-
       this.formTrip.patchValue({
         id: trip.id,
         departure: trip.departure,
         destination: trip.destination,
         startDate: startDate,
         endDate: endDate,
-        timeStart: startDate.getTime()+startDate.getHours()+startDate.getMinutes(),
-        timeEnd: endDate.getTime()+endDate.getHours()+endDate.getMinutes(),
         bus: trip.bus,
         passengers: trip.passengers,
       });
@@ -121,23 +113,10 @@ export class TripDetailComponent implements OnInit {
     this.personsOnList = this.allPersons;
   }
 
-  private restartArray(all: Person[], inTrip: Person[]) {
-
-    all.forEach((element1,index1)=>{
-      inTrip.forEach((element2, index2)=>{
-        if(element1!=element2) delete all[index2];
-      })
-    });
-    console.log(all);
-    this.allPersons = all;
-    console.log(this.allPersons);
-  }
 
   public get fc() {
     return this.formTrip.controls;
   }
-
-
 
   generateNewListPersons() {
     console.log(this.personsSelection.selected)
@@ -227,7 +206,4 @@ export class TripDetailComponent implements OnInit {
 
   }
 
-  getTime() {
-    return (this.formTrip.get(["startDate"])?.value.getTime() / 1000)
-  }
 }
